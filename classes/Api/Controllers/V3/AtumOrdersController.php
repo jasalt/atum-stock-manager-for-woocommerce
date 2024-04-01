@@ -660,7 +660,11 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 				$quantity = isset( $posted['quantity'] ) ? $posted['quantity'] : 1;
 				if ( $item instanceof POItemProduct ) {
 					$product = Helpers::get_atum_product( $product );
-					$total   = apply_filters( 'atum/api/atum_purchase_order/item_total', $product->get_purchase_price() * $quantity, $item, $posted );
+					$purchase_price = $product->get_purchase_price();
+					if ($purchase_price == ""){
+						$purchase_price = 0;
+					}
+					$total   = apply_filters( 'atum/api/atum_purchase_order/item_total', $purchase_price * $quantity, $item, $posted );
 				}
 				else {
 					$total = wc_get_price_excluding_tax( $product, [ 'qty' => $quantity ] );
